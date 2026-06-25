@@ -1,0 +1,22 @@
+# --- Données des tenants (e-mails de régies, leads = données personnelles) ---
+projects/*
+!projects/.gitkeep
+
+# --- Bases de données ---
+data/
+*.sqlite
+*.sqlite-wal
+*.sqlite-shm
+*.db
+
+# --- Secrets / config locale ---
+config.local.php
+.env
+*.local.json
+
+# --- Logs ---
+*.log
+
+# --- Système ---
+.DS_Store
+Thumbs.db

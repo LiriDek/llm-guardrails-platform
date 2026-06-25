@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>NEXUS — Connexion</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;500&family=Space+Grotesk:wght@600;700&display=swap" rel="stylesheet">
+<style>
+:root { --bg:#faf9f5; --panel:#f3f1e9; --fg:#2b2a27; --muted:#86837a; --line:#e6e3da; --accent:#c96442; --accent-fg:#fff; --err:#c0392b; }
+* { margin:0; padding:0; box-sizing:border-box; }
+html,body { height:100%; }
+body { background:var(--bg); color:var(--fg); font-family:'Inter',sans-serif; font-size:14px;
+  background-image:linear-gradient(var(--line) 1px,transparent 1px),linear-gradient(90deg,var(--line) 1px,transparent 1px);
+  background-size:40px 40px; display:flex; align-items:center; justify-content:center; }
+.card { width:340px; max-width:calc(100vw - 32px); background:var(--bg); border:1px solid var(--fg); padding:32px 28px; }
+.logo { font-family:'Space Grotesk'; font-weight:700; font-size:18px; letter-spacing:0.5px; display:flex; align-items:center; gap:10px; margin-bottom:4px; }
+.logo-mark { width:26px; height:26px; border:1.5px solid var(--accent); color:var(--accent); display:flex; align-items:center; justify-content:center; font-size:12px; font-weight:700; }
+.sub { font-family:'JetBrains Mono'; font-size:10px; text-transform:uppercase; letter-spacing:1.5px; color:var(--muted); margin-bottom:26px; }
+label { font-family:'JetBrains Mono'; font-size:10px; text-transform:uppercase; letter-spacing:1px; color:var(--muted); display:block; margin-bottom:6px; }
+input { width:100%; border:1px solid var(--line); background:var(--bg); color:var(--fg); font-family:'Inter'; font-size:14px; padding:10px 12px; outline:none; }
+input:focus { border-color:var(--fg); }
+button { width:100%; margin-top:16px; padding:11px; background:var(--accent); color:var(--accent-fg); border:none; cursor:pointer; font-family:'JetBrains Mono'; font-size:12px; text-transform:uppercase; letter-spacing:1.5px; }
+button:hover { opacity:0.9; }
+button:disabled { opacity:0.5; cursor:wait; }
+.err { color:var(--err); font-size:12px; margin-top:12px; min-height:16px; font-family:'JetBrains Mono'; }
+</style>
+</head>
+<body>
+<form class="card" id="loginForm" autocomplete="off">
+  <div class="logo"><span class="logo-mark">N</span> NEXUS UNIFIED</div>
+  <div class="sub">Accès protégé</div>
+  <label for="pwd">Mot de passe</label>
+  <input type="password" id="pwd" autofocus autocomplete="current-password" />
+  <button type="submit" id="btn">Se connecter</button>
+  <div class="err" id="err"></div>
+</form>
+<script>
+const form = document.getElementById('loginForm');
+form.addEventListener('submit', async (e) => {
+  e.preventDefault();
+  const btn = document.getElementById('btn'), err = document.getElementById('err');
+  const password = document.getElementById('pwd').value;
+  err.textContent = ''; btn.disabled = true; btn.textContent = 'Vérification…';
+  try {
+    const res = await fetch('nexus.php', { method:'POST', headers:{'Content-Type':'application/json'}, body:JSON.stringify({action:'login', password}) });
+    const j = await res.json();
+    if (j.ok) { window.location.href = 'nexus.php'; }
+    else { err.textContent = j.error || 'Échec'; btn.disabled = false; btn.textContent = 'Se connecter'; document.getElementById('pwd').select(); }
+  } catch (e2) { err.textContent = 'Erreur réseau'; btn.disabled = false; btn.textContent = 'Se connecter'; }
+});
+</script>
+</body>
+</html>
